@@ -1,5 +1,5 @@
 *******************************************************
-<p><img scr=assets/ggf.jpg></img></p>
+<p><img src=assets/script_logo.jpg></img></p>
 <p>INSTALLATION INSTRUCTIONS</p>
 <div>FOR NVIDIA 12</div>
 <ol>
