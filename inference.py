@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+import subprocess
 
 import torch
 from diffusers import AutoencoderKL, FlowMatchEulerDiscreteScheduler
@@ -20,6 +21,21 @@ from memo.utils.vision_utils import preprocess_image, tensor_to_video
 
 logger = logging.getLogger("memo")
 logger.setLevel(logging.INFO)
+
+
+def download_file(url, output_path):
+    """Download a file using curl for Windows compatibility."""
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    # Use curl with -L to follow redirects, -o for output file
+    command = f'curl -L "{url}" -o "{output_path}"'
+    try:
+        subprocess.run(command, check=True, shell=True)
+        if not os.path.exists(output_path):
+            raise RuntimeError(f"Failed to download file to {output_path}")
+        if os.path.getsize(output_path) < 1024 * 1024:  # Basic size check
+            raise RuntimeError(f"{output_path} file seems incorrect (too small), delete it and retry.")
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(f"Failed to download file: {e}")
 
 
 def parse_args():
@@ -60,37 +76,33 @@ def main():
     # Download face analysis and vocal separator models, if they do not exist
     face_analysis = os.path.join(config.misc_model_dir, "misc/face_analysis")
     os.makedirs(face_analysis, exist_ok=True)
-    for model in [
+    
+    face_analysis_models = [
         "1k3d68.onnx",
         "2d106det.onnx",
         "face_landmarker_v2_with_blendshapes.task",
         "genderage.onnx",
         "glintr100.onnx",
         "scrfd_10g_bnkps.onnx",
-    ]:
+    ]
+
+    # Download face analysis models
+    for model in face_analysis_models:
         model_path = os.path.join(face_analysis, "models", model)
         if not os.path.exists(model_path):
             logger.info(f"Downloading {model} to {face_analysis}/models")
-            os.system(
-                f"wget -P {face_analysis}/models https://huggingface.co/memoavatar/memo/resolve/main/misc/face_analysis/models/{model}"
-            )
-            # Check if the download was successful
-            if not os.path.exists(model_path):
-                raise RuntimeError(f"Failed to download {model} to {model_path}")
-            # File size check
-            if os.path.getsize(model_path) < 1024 * 1024:
-                raise RuntimeError(f"{model_path} file seems incorrect (too small), delete it and retry.")
+            url = f"https://huggingface.co/memoavatar/memo/resolve/main/misc/face_analysis/models/{model}"
+            download_file(url, model_path)
     logger.info(f"Use face analysis models from {face_analysis}")
 
+    # Download vocal separator model
     vocal_separator = os.path.join(config.misc_model_dir, "misc/vocal_separator/Kim_Vocal_2.onnx")
     if os.path.exists(vocal_separator):
         logger.info(f"Vocal separator {vocal_separator} already exists. Skipping download.")
     else:
         logger.info(f"Downloading vocal separator to {vocal_separator}")
-        os.makedirs(os.path.dirname(vocal_separator), exist_ok=True)
-        os.system(
-            f"wget -P {os.path.dirname(vocal_separator)} https://huggingface.co/memoavatar/memo/resolve/main/misc/vocal_separator/Kim_Vocal_2.onnx"
-        )
+        url = "https://huggingface.co/memoavatar/memo/resolve/main/misc/vocal_separator/Kim_Vocal_2.onnx"
+        download_file(url, vocal_separator)
 
     # Set up device and weight dtype
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
