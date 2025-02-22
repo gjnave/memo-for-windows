@@ -2,7 +2,7 @@ import argparse
 import logging
 import os
 import subprocess
-
+import random 
 import torch
 from diffusers import AutoencoderKL, FlowMatchEulerDiscreteScheduler
 from diffusers.utils.import_utils import is_xformers_available
@@ -61,7 +61,7 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
     output_video_path = os.path.join(
         output_dir,
-        f"{os.path.basename(input_image_path).split('.')[0]}_{os.path.basename(input_audio_path).split('.')[0]}.mp4",
+        f"{os.path.basename(input_image_path).split('.')[0]}_{os.path.basename(input_audio_path).split('.')[0]}_{random.randint(1000,9999)}.mp4",
     )
 
     if os.path.exists(output_video_path):
