@@ -1,4 +1,6 @@
 import os
+import sys
+import ctypes
 import gradio as gr
 import subprocess
 from PIL import Image
@@ -7,8 +9,18 @@ from pathlib import Path
 import re
 import threading
 import queue
-import queue
 from inference import main as inference_main 
+
+def is_admin():
+    """Check if the script is running with admin privileges"""
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin() != 0
+    except Exception:
+        return False
+
+if not is_admin():
+    print("\nThis script requires administrator privileges.")
+    sys.exit(1)
 
 def check_image_ratio(image_path):
     """Check if image has 1:1 aspect ratio"""
