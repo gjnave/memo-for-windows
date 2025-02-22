@@ -12,7 +12,18 @@
     <li>pip install https://github.com/woct0rdho/triton-windows/releases/download/v3.2.0-windows.post10/triton-3.2.0-cp310-cp310-win_amd64.whl</li>
     <li>pip install -e .</li>
 </ol>
-www.getgoingfast.pro
+To run:
+<ol>
+    <li>Open Command Line</li>
+    <li>conda activate memo</li>
+    <li>Alter this code to match your image and text file: 
+python inference.py --config configs/inference.yaml --input_image assets/examples/barmfarger.jpg --input_audio assets/examples/speech.wav --output_dir outputs</li>
+    <li>THe first time ran, models will download</li>
+    <li>Video will be saved in \outputs folder</li>
+</ol>
+
+Free System Checker: https://www.patreon.com/posts/automated-system-117200313
+A Memo GUI can be found at: www.getgoingfast.pro
 
 ********************************************************
 # MEMO
