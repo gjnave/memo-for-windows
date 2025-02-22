@@ -46,18 +46,30 @@ def parse_args():
     parser.add_argument("--input_audio", type=str)
     parser.add_argument("--output_dir", type=str)
     parser.add_argument("--seed", type=int, default=42)
-
+    
     return parser.parse_args()
 
 
-def main():
-    # Parse arguments
-    args = parse_args()
-    input_image_path = args.input_image
-    input_audio_path = args.input_audio
+
+def main(image_path=None, audio_path=None, output_dir=None, config=None):
+    # Handle both CLI and function call cases
+    if all(arg is None for arg in [image_path, audio_path, output_dir, config]):
+        args = parse_args()
+        image_path = args.input_image
+        audio_path = args.input_audio
+        output_dir = args.output_dir
+        config = args.config
+        seed = args.seed
+    else:
+        # Use default seed when called as a function
+        seed = 42
+        
+    input_image_path = image_path 
+    input_audio_path = audio_path
+        
     if "wav" not in input_audio_path:
         logger.warning("MEMO might not generate full-length video for non-wav audio file.")
-    output_dir = args.output_dir
+
     os.makedirs(output_dir, exist_ok=True)
     output_video_path = os.path.join(
         output_dir,
@@ -68,10 +80,10 @@ def main():
         logger.info(f"Output file {output_video_path} already exists. Skipping inference.")
         return
 
-    generator = torch.manual_seed(args.seed)
+    generator = torch.manual_seed(seed)
 
-    logger.info(f"Loading config from {args.config}")
-    config = OmegaConf.load(args.config)
+    logger.info(f"Loading config from {config}")
+    config = OmegaConf.load(config)
 
     # Download face analysis and vocal separator models, if they do not exist
     face_analysis = os.path.join(config.misc_model_dir, "misc/face_analysis")
@@ -256,7 +268,7 @@ def main():
     video_frames = video_frames[:, :audio_length]
 
     tensor_to_video(video_frames, output_video_path, input_audio_path, fps=config.fps)
-
-
+    return output_video_path
+    
 if __name__ == "__main__":
     main()
