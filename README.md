@@ -1,7 +1,7 @@
 *******************************************************
 <p><img src=assets/script_logo.jpg></img></p>
 <p>INSTALLATION INSTRUCTIONS</p>
-<div>FOR NVIDIA 12</div>
+<div> !! FOR NVIDIA CUDA >= 12.6 !!</div>
 <ol>
     <li>conda create -n memo python=3.10 -y</li>
     <li>conda activate memo</li>
