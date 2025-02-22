@@ -22,8 +22,13 @@ python inference.py --config configs/inference.yaml --input_image assets/example
     <li>Video will be saved in \outputs folder</li>
 </ol>
 
-Free System Checker: https://www.patreon.com/posts/automated-system-117200313
-A Memo GUI can be found at: www.getgoingfast.pro
+<p>** Free System Checker: https://www.patreon.com/posts/automated-system-117200313</p>
+<p></p>** A Cognibuild GUI can be found at: <a href="https://www.patreon.com/posts/memo-avatar-best-122871739">
+    www.getgoingfast.pro
+</a></br>
+<a href="https://www.patreon.com/posts/memo-avatar-best-122871739">
+    <img src="assets/memobarm.jpg" alt="Memo Avatar">
+</a></p>
 
 ********************************************************
 # MEMO
