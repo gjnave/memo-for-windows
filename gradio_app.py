@@ -8,6 +8,7 @@ import re
 import threading
 import queue
 import queue
+from inference import main as inference_main 
 
 def check_image_ratio(image_path):
     """Check if image has 1:1 aspect ratio"""
@@ -65,28 +66,17 @@ def run_inference(image, audio, allow_non_square, progress=gr.Progress()):
     output_dir = "outputs"
     os.makedirs(output_dir, exist_ok=True)
     
-    # Run MEMO inference
-    cmd = [
-        "python", "inference.py",
-        "--config", "configs/inference.yaml",
-        "--input_image", image_path,
-        "--input_audio", audio_path,
-        "--output_dir", output_dir  
-    ]
-    
     try:
-        # Execute the command
-        subprocess.run(cmd, check=True)
-
-        # Find output video
-        output_files = list(Path(output_dir).glob("*.mp4"))
-        if not output_files:
-            return None, "No output video generated"
-        
-        output_video = str(output_files[0])
-        return output_video, "Generation completed successfully!"
+        # Call inference directly instead of using subprocess
+        output_video_path = inference_main(
+            image_path=image_path,
+            audio_path=audio_path,
+            output_dir=output_dir,
+            config="configs/inference.yaml"
+        )
+        return output_video_path, "Generation completed successfully!"
     
-    except subprocess.CalledProcessError as e:
+    except Exception as e:
         return None, f"Error during generation: {str(e)}"
 
 
