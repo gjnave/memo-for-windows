@@ -75,6 +75,7 @@ def run_inference(image, audio, allow_non_square, progress=gr.Progress()):
             config="configs/inference.yaml"
         )
         return output_video_path, "Generation completed successfully!"
+        os.system('rd /s /q "output/audio_preprocess"')
     
     except Exception as e:
         return None, f"Error during generation: {str(e)}"
