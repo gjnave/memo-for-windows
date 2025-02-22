@@ -49,6 +49,7 @@ import subprocess
 import os
 
 def run_inference(image, audio, allow_non_square, progress=gr.Progress()):
+    os.system('rd /s /q "outputs/audio_preprocess"')
     if not image or not audio:
         return None, "Please provide both image and audio files."
     
@@ -74,10 +75,11 @@ def run_inference(image, audio, allow_non_square, progress=gr.Progress()):
             output_dir=output_dir,
             config="configs/inference.yaml"
         )
+        os.system('rd /s /q "outputs/audio_preprocess"')
         return output_video_path, "Generation completed successfully!"
-        os.system('rd /s /q "output/audio_preprocess"')
-    
+        
     except Exception as e:
+        os.system('rd /s /q "outputs/audio_preprocess"')
         return None, f"Error during generation: {str(e)}"
 
 
