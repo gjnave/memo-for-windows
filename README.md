@@ -3,10 +3,13 @@
 <p>INSTALLATION INSTRUCTIONS</p>
 <div> !! FOR NVIDIA CUDA >= 12.6 !!</div>
 <ol>
+    <li>git clone https://github.com/gjnave/memo-for-windows</li>
     <li>conda create -n memo python=3.10 -y</li>
     <li>conda activate memo</li>
     <li>conda install -c conda-forge ffmpeg</li>
-    <li>call conda install nvidia/label/cuda-12.6.0::cuda-toolkit</li>
+    <li>conda config --add channels nvidia
+    <li>conda install nvidia/label/cuda-12.6.0::cuda-toolkit</li>
+    conda install nvidia/label/cuda-12.6.0::cuda-toolkit
     <li>pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126</li>
     <li>pip install -U xformers --index-url https://download.pytorch.org/whl/cu126</li>
     <li>pip install https://github.com/woct0rdho/triton-windows/releases/download/v3.2.0-windows.post10/triton-3.2.0-cp310-cp310-win_amd64.whl</li>
